@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ms_task/domain/entities/report_details.dart';
 
 class HeaderWidget extends StatelessWidget {
-  const HeaderWidget({super.key});
+  HeaderWidget({required this.report, super.key});
+
+  final ReportDetails report;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,7 @@ class HeaderWidget extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       Text(
-                        'Dr Sadia Khan(PhD)',
+                        report.reviewedBy,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ],
@@ -62,7 +65,7 @@ class HeaderWidget extends StatelessWidget {
         ),
         const Spacer(),
         Text(
-          'Diabetes\n(Gestational)',
+          report.diseaseName,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleLarge,
         ),
@@ -78,7 +81,7 @@ class HeaderWidget extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 Text(
-                  'Dr. Nimrah H.Sattar',
+                  report.writtenBy,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
               ],
@@ -91,7 +94,7 @@ class HeaderWidget extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 Text(
-                  'October 20, 2022',
+                  report.updatedOn,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
               ],
