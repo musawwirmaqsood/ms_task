@@ -2,6 +2,7 @@ library scrollable_list_tabview;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:ms_task/ui/widgets/header_widget.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'model/scrollable_list_tab.dart';
 
@@ -62,51 +63,116 @@ class _ScrollableListTabViewState extends State<ScrollableListTabView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: widget.tabHeight,
-          color: Theme.of(context).cardColor,
-          child: ScrollablePositionedList.builder(
-            itemCount: widget.tabs.length,
-            scrollDirection: Axis.horizontal,
-            itemScrollController: _tabScrollController,
-            padding: const EdgeInsets.symmetric(vertical: 2.5),
-            itemBuilder: (context, index) {
-              return ValueListenableBuilder<int>(
-                  valueListenable: _index,
-                  builder: (_, i, __) {
-                    var selected = index == i;
-                    return TextButton(
-                      child: _buildTab(index, selected),
-                      onPressed: () => _onTabPressed(index),
-                    );
-                  });
-            },
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          const SliverAppBar(
+            // title: Text('Sticky List Item'),
+            floating: true,
+            expandedHeight: 400,
+            flexibleSpace: HeaderWidget(),
           ),
-        ),
-        Expanded(
-          child: ScrollablePositionedList.builder(
-            itemScrollController: _bodyScrollController,
-            itemPositionsListener: _bodyPositionsListener,
-            itemCount: widget.tabs.length,
-            itemBuilder: (_, index) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: _kTabMargin.add(const EdgeInsets.all(5.0)),
-                  child: _buildInnerTab(index),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _SliverStickyHeaderDelegate(
+              child: Container(
+                height: widget.tabHeight,
+                color: Theme.of(context).cardColor,
+                child: ScrollablePositionedList.builder(
+                  itemCount: widget.tabs.length,
+                  scrollDirection: Axis.horizontal,
+                  itemScrollController: _tabScrollController,
+                  padding: const EdgeInsets.symmetric(vertical: 2.5),
+                  itemBuilder: (context, index) {
+                    return ValueListenableBuilder<int>(
+                        valueListenable: _index,
+                        builder: (_, i, __) {
+                          var selected = index == i;
+                          return TextButton(
+                            child: _buildTab(index, selected),
+                            onPressed: () => _onTabPressed(index),
+                          );
+                        });
+                  },
                 ),
-                Flexible(
-                  child: widget.tabs[index].body,
-                )
-              ],
+              ),
             ),
           ),
-        ),
-      ],
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return ScrollablePositionedList.builder(
+                  shrinkWrap: true,
+                  itemScrollController: _bodyScrollController,
+                  itemPositionsListener: _bodyPositionsListener,
+                  itemCount: widget.tabs.length,
+                  itemBuilder: (_, index) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: _kTabMargin.add(const EdgeInsets.all(5.0)),
+                        child: _buildInnerTab(index),
+                      ),
+                      Flexible(
+                        child: widget.tabs[index].body,
+                      )
+                    ],
+                  ),
+                );
+              },
+              childCount: 1,
+            ),
+          ),
+        ],
+      ),
     );
+
+    // Column(
+    //   children: [
+    //     Container(
+    //       height: widget.tabHeight,
+    //       color: Theme.of(context).cardColor,
+    //       child: ScrollablePositionedList.builder(
+    //         itemCount: widget.tabs.length,
+    //         scrollDirection: Axis.horizontal,
+    //         itemScrollController: _tabScrollController,
+    //         padding: const EdgeInsets.symmetric(vertical: 2.5),
+    //         itemBuilder: (context, index) {
+    //           return ValueListenableBuilder<int>(
+    //               valueListenable: _index,
+    //               builder: (_, i, __) {
+    //                 var selected = index == i;
+    //                 return TextButton(
+    //                   child: _buildTab(index, selected),
+    //                   onPressed: () => _onTabPressed(index),
+    //                 );
+    //               });
+    //         },
+    //       ),
+    //     ),
+    //     Expanded(
+    //       child: ScrollablePositionedList.builder(
+    //         itemScrollController: _bodyScrollController,
+    //         itemPositionsListener: _bodyPositionsListener,
+    //         itemCount: widget.tabs.length,
+    //         itemBuilder: (_, index) => Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           mainAxisSize: MainAxisSize.min,
+    //           children: [
+    //             Padding(
+    //               padding: _kTabMargin.add(const EdgeInsets.all(5.0)),
+    //               child: _buildInnerTab(index),
+    //             ),
+    //             Flexible(
+    //               child: widget.tabs[index].body,
+    //             )
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 
   Widget _buildInnerTab(int index) {
@@ -202,5 +268,30 @@ class _ScrollableListTabViewState extends State<ScrollableListTabView> {
   void dispose() {
     _bodyPositionsListener.itemPositions.removeListener(_onInnerViewScrolled);
     return super.dispose();
+  }
+}
+
+class _SliverStickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  _SliverStickyHeaderDelegate({
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  double get minExtent => 60.0;
+
+  @override
+  double get maxExtent => 60.0;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return SizedBox.expand(child: child);
+  }
+
+  @override
+  bool shouldRebuild(_SliverStickyHeaderDelegate oldDelegate) {
+    return false;
   }
 }

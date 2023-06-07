@@ -21,17 +21,72 @@ class _ScrollableListTabPageState extends State<ScrollableListTabPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(300), child: HeaderWidget()),
-      body: ScrollableListTabView(
-        tabHeight: 48,
-        bodyAnimationDuration: const Duration(milliseconds: 150),
-        tabAnimationCurve: Curves.easeOut,
-        tabAnimationDuration: const Duration(milliseconds: 200),
-        tabs: _generateScrollableListTabs(gestationalDiabetesData),
-      ),
+    return ScrollableListTabView(
+      
+      tabHeight: 48,
+      bodyAnimationDuration: const Duration(milliseconds: 150),
+      tabAnimationCurve: Curves.easeOut,
+      tabAnimationDuration: const Duration(milliseconds: 200),
+      tabs: _generateScrollableListTabs(gestationalDiabetesData),
     );
+    // return Scaffold(
+    //   body: CustomScrollView(
+    //     slivers: <Widget>[
+    //           const SliverAppBar(
+    //               actions: <Widget>[
+    //                 Icon(
+    //                   Icons.person,
+    //                   size: 40,
+    //                 )
+    //               ],
+    //               title: Text("SliverAppBar Example"),
+    //               leading: Icon(Icons.menu),
+    //               backgroundColor: Colors.green,
+    //               expandedHeight: 100.0,
+    //               floating: false,
+    //               pinned: false),
+
+    //           // SliverList(
+    //           //     delegate: SliverChildListDelegate([
+    //           //   Container(
+    //           //     height: 600,
+    //           //     color: Colors.red,
+    //           //     child: ScrollableListTabView(
+    //           //       tabHeight: 48,
+    //           //       bodyAnimationDuration: const Duration(milliseconds: 150),
+    //           //       tabAnimationCurve: Curves.easeOut,
+    //           //       tabAnimationDuration: const Duration(milliseconds: 200),
+    //           //       tabs: _generateScrollableListTabs(gestationalDiabetesData),
+    //           //     ),
+    //           //   ),
+    //           //   Container(
+    //           //     height: 600,
+    //           //     color: Colors.pink,
+    //           //   ),
+    //           // ]
+    //           // ))
+    //         ] +
+    //         [
+    //           ScrollableListTabView(
+    //             tabHeight: 48,
+    //             bodyAnimationDuration: const Duration(milliseconds: 150),
+    //             tabAnimationCurve: Curves.easeOut,
+    //             tabAnimationDuration: const Duration(milliseconds: 200),
+    //             tabs: _generateScrollableListTabs(gestationalDiabetesData),
+    //           ),
+    //         ],
+    //   ),
+
+    //   // appBar: const PreferredSize(
+    //   //     preferredSize: Size.fromHeight(300), child: HeaderWidget()),
+    //   // body: ScrollableListTabView(
+    //   //   tabHeight: 48,
+    //   //   bodyAnimationDuration: const Duration(milliseconds: 150),
+    //   //   tabAnimationCurve: Curves.easeOut,
+    //   //   tabAnimationDuration: const Duration(milliseconds: 200),
+    //   //   tabs: _generateScrollableListTabs(gestationalDiabetesData),
+    //   // ),
+    // );
   }
 
   List<ScrollableListTab> _generateScrollableListTabs(
