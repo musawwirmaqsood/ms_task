@@ -32,17 +32,33 @@ class _MedicalReportPagePageState extends State<MedicalReportPage> {
         builder: (context, state) {
           state as MedicalReportState;
           return Scaffold(
-            appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(300),
-                child: HeaderWidget(
-                  report: state.reportDetails,
-                )),
-            body: ScrollableListTabView(
-              tabHeight: 48,
-              bodyAnimationDuration: const Duration(milliseconds: 150),
-              tabAnimationCurve: Curves.easeOut,
-              tabAnimationDuration: const Duration(milliseconds: 200),
-              tabs: _generateScrollableListTabs(state.reportDetails.otherInfo),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  if (state.showHeader)
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 100),
+                      height: state.showHeader ? 350 : 0,
+                      curve: Curves.easeOutCubic,
+                      child: HeaderWidget(
+                        report: state.reportDetails,
+                      ),
+                    ),
+                  Expanded(
+                    child: ScrollableListTabView(
+                      onScroll: (double? itemLeadingEdge) {
+                        cubit.showHideHeader(itemLeadingEdge);
+                      },
+                      tabHeight: 48,
+                      bodyAnimationDuration: const Duration(milliseconds: 150),
+                      tabAnimationCurve: Curves.easeOut,
+                      tabAnimationDuration: const Duration(milliseconds: 200),
+                      tabs: _generateScrollableListTabs(
+                          state.reportDetails.otherInfo),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         });

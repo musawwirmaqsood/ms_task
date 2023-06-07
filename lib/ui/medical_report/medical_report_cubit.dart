@@ -15,4 +15,13 @@ class MedicalReportCubit extends Cubit<MedicalReportState> {
     final resonse = reportDetailsRepository.getReportDetails();
     emit(state.copyWith(reportDetails: resonse));
   }
+
+  void showHideHeader(double? itemLeadingEdge) {
+    if (itemLeadingEdge == null) return;
+    if (itemLeadingEdge > -0.1) {
+      emit(state.copyWith(showHeader: false));
+    } else {
+      emit(state.copyWith(showHeader: true));
+    }
+  }
 }

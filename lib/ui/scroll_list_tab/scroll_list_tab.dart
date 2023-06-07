@@ -8,16 +8,16 @@ import 'model/scrollable_list_tab.dart';
 export 'model/list_tab.dart';
 export 'model/scrollable_list_tab.dart';
 
-const Duration _kScrollDuration = const Duration(milliseconds: 150);
+const Duration _kScrollDuration = Duration(milliseconds: 150);
 const EdgeInsetsGeometry _kTabMargin =
-    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0);
-
-const SizedBox _kSizedBoxW8 = const SizedBox(width: 8.0);
+    EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0);
 
 class ScrollableListTabView extends StatefulWidget {
   /// Create a new [ScrollableListTabView]
   const ScrollableListTabView(
-      {required this.tabs,
+      {super.key,
+      required this.tabs,
+      required this.onScroll,
       this.tabHeight = kToolbarHeight,
       this.tabAnimationDuration = _kScrollDuration,
       this.bodyAnimationDuration = _kScrollDuration,
@@ -41,6 +41,8 @@ class ScrollableListTabView extends StatefulWidget {
 
   /// Animation curve used when changing index of inner [ScrollView]s.
   final Curve bodyAnimationCurve;
+
+  final Function(double? itemLeadingEdge) onScroll;
 
   @override
   _ScrollableListTabViewState createState() => _ScrollableListTabViewState();
@@ -171,6 +173,11 @@ class _ScrollableListTabViewState extends State<ScrollableListTabView> {
     var firstIndex =
         _bodyPositionsListener.itemPositions.value.elementAt(0).index;
     if (_index.value == firstIndex) return;
+    print(
+        'itemLeadingEdge ${_bodyPositionsListener.itemPositions.value.elementAt(0).itemLeadingEdge}');
+    widget.onScroll(_bodyPositionsListener.itemPositions.value
+        .elementAt(0)
+        .itemLeadingEdge);
 
     /// A new index has been detected.
     await _handleTabScroll(firstIndex);
