@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ms_task/ui/medical_report/medical_report_cubit.dart';
 import 'package:ms_task/ui/medical_report/medical_report_state.dart';
 import 'package:ms_task/ui/scroll_list_tab/scroll_list_tab.dart';
-import 'package:ms_task/ui/widgets/header_widget.dart';
 import 'package:ms_task/ui/widgets/youtube_player_widget.dart';
 
 class MedicalReportPage extends StatefulWidget {
@@ -31,19 +30,13 @@ class _MedicalReportPagePageState extends State<MedicalReportPage> {
         bloc: cubit,
         builder: (context, state) {
           state as MedicalReportState;
-          return Scaffold(
-            appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(300),
-                child: HeaderWidget(
-                  report: state.reportDetails,
-                )),
-            body: ScrollableListTabView(
-              tabHeight: 48,
-              bodyAnimationDuration: const Duration(milliseconds: 150),
-              tabAnimationCurve: Curves.easeOut,
-              tabAnimationDuration: const Duration(milliseconds: 200),
-              tabs: _generateScrollableListTabs(state.reportDetails.otherInfo),
-            ),
+          return ScrollableListTabView(
+            tabHeight: 48,
+            reportDetails: state.reportDetails,
+            bodyAnimationDuration: const Duration(milliseconds: 150),
+            tabAnimationCurve: Curves.easeOut,
+            tabAnimationDuration: const Duration(milliseconds: 200),
+            tabs: _generateScrollableListTabs(state.reportDetails.otherInfo),
           );
         });
   }
